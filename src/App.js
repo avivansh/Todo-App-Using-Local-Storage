@@ -3,42 +3,35 @@ import { Container } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-import TodoForm from "./Components/TodoForm";
 import Todos from "./Components/Todos";
+import TodoForm from "./Components/TodoForm";
 
 const App = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     const localTodos = localStorage.getItem("todos");
-    console.log("localStorage", { localStorage });
-    console.log("localTodos", localTodos);
+    console.log({ localStorage });
     if (localTodos) {
-      console.log("localTodos", localTodos);
       setTodos(JSON.parse(localTodos));
     }
   }, []);
+
+  const addTodos = async (todo) => {
+    setTodos([...todos, todo]);
+  };
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const addTodos = (todo) => {
-    console.log("Adding a todo", todo);
-    console.log("todos before", todos);
-    setTodos([...todos, todo]);
-    console.log("todos after", todos);
+  const markComplete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  const markComplete = (id) => {
-    console.log("Removing a todo");
-    console.log("todos before", todos);
-    setTodos(todos.filter((todo) => todo.id !== id));
-    console.log("todos after", todos);
-  };
   return (
-    <Container type="fluid">
-      <h1>Todos App with local storage</h1>
+    <Container fluid>
+      <h1>Todo with local storage</h1>
       <Todos todos={todos} markComplete={markComplete} />
       <TodoForm addTodos={addTodos} />
     </Container>
